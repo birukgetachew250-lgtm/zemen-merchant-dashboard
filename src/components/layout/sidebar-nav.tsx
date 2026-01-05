@@ -21,10 +21,12 @@ import {
   Settings,
   Building2,
   LifeBuoy,
+  Wallet,
 } from 'lucide-react';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/payments/qr', label: 'Payments', icon: Wallet },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/merchants', label: 'Merchants', icon: Building2 },
   { href: '/operators', label: 'Operators', icon: Users },
@@ -49,7 +51,7 @@ export function SidebarNav() {
               <Link href={item.href} passHref>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href) && (item.href !== '/dashboard' || pathname === '/dashboard')}
                   tooltip={item.label}
                   className="justify-start"
                 >

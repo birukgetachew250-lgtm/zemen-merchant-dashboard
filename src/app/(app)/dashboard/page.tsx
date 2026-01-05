@@ -4,7 +4,8 @@ import {
     CreditCard,
     DollarSign,
     Users,
-    KeyRound
+    KeyRound,
+    QrCode
   } from "lucide-react"
   
   import {
@@ -33,7 +34,7 @@ import {
   import { dashboardStats, transactions, transactionVolumeByDay } from "@/lib/data"
   import { formatCurrency } from "@/lib/utils"
   import { TransactionVolumeChart } from "./_components/transaction-volume-chart"
-import { QrPaymentDialog } from "./_components/qr-payment-dialog"
+import Link from "next/link"
   
   export default function DashboardPage() {
     const recentTransactions = transactions.slice(0, 5);
@@ -106,10 +107,10 @@ import { QrPaymentDialog } from "./_components/qr-payment-dialog"
                   </CardDescription>
                 </div>
                 <Button asChild size="sm" className="ml-auto gap-1">
-                  <a href="/transactions">
+                  <Link href="/transactions">
                     View All
                     <ArrowUpRight className="h-4 w-4" />
-                  </a>
+                  </Link>
                 </Button>
               </CardHeader>
               <CardContent>
@@ -165,7 +166,12 @@ import { QrPaymentDialog } from "./_components/qr-payment-dialog"
                     <CardDescription>Generate payments instantly.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4">
-                    <QrPaymentDialog />
+                    <Button asChild variant="outline" size="lg" className="h-auto py-4 flex-col gap-2">
+                      <Link href="/payments/qr">
+                        <QrCode className="h-6 w-6"/>
+                        <span>QR Payment</span>
+                      </Link>
+                    </Button>
                      <Button variant="outline" size="lg" className="h-auto py-4 flex-col gap-2">
                         <KeyRound className="h-6 w-6"/>
                         <span>OTP Payment</span>
