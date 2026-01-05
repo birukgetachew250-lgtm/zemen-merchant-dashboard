@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -30,7 +31,8 @@ import {
   FileCog,
   KeyRound,
   UserCircle,
-  Building
+  Building,
+  PlugZap
 } from 'lucide-react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 
@@ -49,6 +51,7 @@ const settingsMenuItems = [
     { href: '/settings/users', label: 'Users', icon: Users },
     { href: '/settings/roles', label: 'Roles & Permissions', icon: UserCog },
     { href: '/settings/branches', label: 'Branches', icon: Building },
+    { href: '/settings/gateway', label: 'Gateway', icon: PlugZap },
     { href: '/settings/workflows', label: 'Workflows', icon: FileCog },
     { href: '/settings/security', label: 'Security', icon: KeyRound },
 ]
