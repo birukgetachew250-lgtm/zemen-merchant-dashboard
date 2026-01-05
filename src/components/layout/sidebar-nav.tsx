@@ -47,19 +47,17 @@ export function SidebarNav() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href} legacyBehavior passHref>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  tooltip={item.label}
-                  className="justify-start"
-                >
-                  <a>
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.label}</span>
-                  </a>
-                </SidebarMenuButton>
-              </Link>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === item.href}
+                tooltip={item.label}
+                className="justify-start"
+              >
+                <Link href={item.href}>
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -68,15 +66,13 @@ export function SidebarNav() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link href="/settings" legacyBehavior passHref>
-              <SidebarMenuButton asChild isActive={pathname === '/settings'} tooltip="Settings" className="justify-start">
-                <a><Settings className="h-4 w-4" /><span>Settings</span></a>
-              </SidebarMenuButton>
-            </Link>
+            <SidebarMenuButton asChild isActive={pathname === '/settings'} tooltip="Settings" className="justify-start">
+              <Link href="/settings"><Settings className="h-4 w-4" /><span>Settings</span></Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
              <SidebarMenuButton asChild tooltip="Support" className="justify-start">
-                <a><LifeBuoy className="h-4 w-4" /><span>Support</span></a>
+                <Link href="#"><LifeBuoy className="h-4 w-4" /><span>Support</span></Link>
               </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
