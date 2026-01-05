@@ -10,6 +10,7 @@ import { merchants } from "@/lib/data";
 import { MerchantsDataTable } from "./_components/merchants-data-table";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function MerchantsPage() {
     return (
@@ -24,9 +25,11 @@ export default function MerchantsPage() {
                                 Onboard, view, and manage all merchants.
                             </CardDescription>
                         </div>
-                        <Button className="ml-auto gap-1">
-                            <PlusCircle className="h-4 w-4" />
-                            Onboard Merchant
+                        <Button asChild className="ml-auto gap-1">
+                            <Link href="/merchants/onboard">
+                                <PlusCircle className="h-4 w-4" />
+                                Onboard Merchant
+                            </Link>
                         </Button>
                     </CardHeader>
                     <CardContent>
