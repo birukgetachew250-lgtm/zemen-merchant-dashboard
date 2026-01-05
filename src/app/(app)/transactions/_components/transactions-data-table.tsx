@@ -32,7 +32,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MixerHorizontalIcon } from '@radix-ui/react-icons';
+import { SlidersHorizontal } from 'lucide-react';
 import { RowActions } from './row-actions';
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -122,7 +122,7 @@ export function TransactionsDataTable<TData, TValue>({
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
-                    <MixerHorizontalIcon className="mr-2 h-4 w-4" />
+                    <SlidersHorizontal className="mr-2 h-4 w-4" />
                     View
                 </Button>
             </DropdownMenuTrigger>
