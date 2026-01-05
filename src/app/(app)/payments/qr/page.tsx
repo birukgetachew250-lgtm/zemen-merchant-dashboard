@@ -47,10 +47,13 @@ export default function QrPaymentPage() {
 
     const qrData = constructQrCodeString(operator.bankAccount, operator.merchant, values.amount);
     
-    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrData)}&size=300x300`;
-    
-    setQrCodeUrl(qrApiUrl);
-    setIsGenerating(false);
+    // Using a timeout to give the UI time to update before the API call,
+    // which can sometimes block the main thread briefly.
+    setTimeout(() => {
+        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrData)}&size=300x300`;
+        setQrCodeUrl(qrApiUrl);
+        setIsGenerating(false);
+    }, 50);
   }
 
   const handleNewQr = () => {
@@ -69,7 +72,7 @@ export default function QrPaymentPage() {
                         <CardHeader>
                             <CardTitle>Payment QR Code</CardTitle>
                             <CardDescription>
-                                Customer can scan this code to pay. The code will expire in 5 minutes.
+                                Customer can scan this code to pay.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="flex flex-col items-center justify-center gap-4">
