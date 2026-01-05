@@ -13,10 +13,8 @@ import { OnboardingChart } from "./_components/onboarding-chart";
 import { TransactionVolumeChart } from "../dashboard/_components/transaction-volume-chart";
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
     DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
+    DropdownMenuItem,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
 import { ReportFilters } from "./_components/report-filters";
