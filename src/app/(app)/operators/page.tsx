@@ -10,6 +10,7 @@ import { operators } from "@/lib/data";
 import { OperatorsDataTable } from "./_components/operators-data-table";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function OperatorsPage() {
     return (
@@ -24,9 +25,11 @@ export default function OperatorsPage() {
                                 Add, view, and manage all operators and sales agents.
                             </CardDescription>
                         </div>
-                        <Button className="ml-auto gap-1">
-                            <PlusCircle className="h-4 w-4" />
-                            Add Operator
+                        <Button asChild className="ml-auto gap-1">
+                            <Link href="/operators/onboard">
+                                <PlusCircle className="h-4 w-4" />
+                                Add Operator
+                            </Link>
                         </Button>
                     </CardHeader>
                     <CardContent>
