@@ -1,38 +1,89 @@
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["binaryEngine"]
-  binaryTargets   = ["native", "rhel-openssl-1.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  engineType = "binary"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  username  String   @unique
+  password  String
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  branchId  String
+  branch    Branch   @relation(fields: [branchId], references: [id])
+  status    String   // Active, Pending
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String    @id @unique
+  name        String    @unique
+  description String
+  permissions RolePermission[]
+  users       User[]
+}
+
+model Permission {
+  id    String @id @unique
+  label String
+  roles RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  createdAt    DateTime   @default(now())
+
+  @@id([roleId, permissionId])
+}
+
+model Branch {
+  id        String   @id @unique
+  name      String
+  location  String
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Merchant {
   id              String        @id @default(cuid())
   name            String
   branch          String
-  status          String // e.g., 'Approved', 'Pending', 'Rejected'
-  onboardingDate  DateTime      @default(now())
+  status          String // Pending, Approved, Rejected
+  onboardingDate  DateTime
   operatorCount   Int
   operators       Operator[]
   transactions    Transaction[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
 model Operator {
-  id               String        @id @default(cuid())
-  name             String
-  merchantId       String
-  merchant         Merchant      @relation(fields: [merchantId], references: [id])
-  branch           String
-  salesVolume      Float
-  transactionCount Int
-  successRate      Float
-  status           String // 'Active', 'Inactive', 'Blocked'
-  bankAccount      String        @unique
-  transactions     Transaction[]
+  id                String        @id @default(cuid())
+  name              String
+  merchantId        String
+  merchant          Merchant      @relation(fields: [merchantId], references: [id])
+  branch            String
+  salesVolume       Float
+  transactionCount  Int
+  successRate       Float
+  status            String // Active, Inactive, Blocked
+  bankAccount       String
+  transactions      Transaction[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }
 
 model Transaction {
@@ -42,10 +93,12 @@ model Transaction {
   operatorId  String
   operator    Operator  @relation(fields: [operatorId], references: [id])
   amount      Float
-  status      String // 'Completed', 'Pending', 'Failed', 'Reconciled'
-  type        String // 'IPS_QR', 'OTP', etc.
-  date        DateTime  @default(now())
+  status      String // Completed, Pending, Failed, Reconciled
+  type        String // IPS_QR, OTP
+  date        DateTime
   disputes    Dispute[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Dispute {
@@ -53,52 +106,7 @@ model Dispute {
   transactionId String
   transaction   Transaction @relation(fields: [transactionId], references: [id])
   reason        String
-  status        String // 'OPEN', 'RESOLVED', 'CLOSED'
+  status        String // OPEN, RESOLVED, CLOSED
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-}
-
-model User {
-  id        String    @id @default(cuid())
-  name      String
-  email     String    @unique
-  username  String    @unique
-  password  String
-  roleId    String
-  role      Role      @relation(fields: [roleId], references: [id])
-  branchId  String
-  branch    Branch    @relation(fields: [branchId], references: [id])
-  status    String // 'Active', 'Pending', 'Inactive'
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
-model Role {
-  id          String           @id
-  name        String           @unique
-  description String?
-  permissions RolePermission[]
-  users       User[]
-}
-
-model Permission {
-  id          String           @id
-  label       String
-  roles       RolePermission[]
-}
-
-model RolePermission {
-  roleId       String
-  permissionId String
-  role         Role         @relation(fields: [roleId], references: [id])
-  permission   Permission   @relation(fields: [permissionId], references: [id])
-
-  @@id([roleId, permissionId])
-}
-
-model Branch {
-  id        String   @id @default(cuid())
-  name      String
-  location  String
-  users     User[]
 }
