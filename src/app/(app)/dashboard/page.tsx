@@ -140,7 +140,7 @@ import Link from "next/link"
                           </div>
                         </TableCell>
                         <TableCell className="hidden xl:table-column">
-                           <Badge className="text-xs" variant={tx.type === 'QR' ? 'default' : 'secondary'}>
+                           <Badge className="text-xs" variant={tx.type === 'IPS QR' ? 'default' : 'secondary'}>
                             {tx.type}
                           </Badge>
                         </TableCell>
@@ -169,7 +169,7 @@ import Link from "next/link"
                     <Button asChild variant="outline" size="lg" className="h-auto py-4 flex-col gap-2">
                       <Link href="/payments/qr">
                         <QrCode className="h-6 w-6"/>
-                        <span>QR Payment</span>
+                        <span>IPS QR</span>
                       </Link>
                     </Button>
                      <Button asChild variant="outline" size="lg" className="h-auto py-4 flex-col gap-2">

@@ -26,7 +26,7 @@ import {
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/payments/qr', label: 'Payments', icon: Wallet },
+  { href: '/payments', label: 'Payments', icon: Wallet },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/merchants', label: 'Merchants', icon: Building2 },
   { href: '/operators', label: 'Operators', icon: Users },

@@ -59,7 +59,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'type',
     header: 'Type',
-    cell: ({ row }) => <Badge variant={row.original.type === 'QR' ? 'default' : 'secondary'}>{row.original.type}</Badge>,
+    cell: ({ row }) => <Badge variant={row.original.type === 'IPS QR' ? 'default' : 'secondary'}>{row.original.type}</Badge>,
     filterFn: (row, id, value) => {
         return value.includes(row.getValue(id))
     }

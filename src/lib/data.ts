@@ -4,20 +4,20 @@ export type Transaction = {
   operator: string;
   amount: number;
   status: 'Completed' | 'Pending' | 'Failed' | 'Reconciled';
-  type: 'QR' | 'OTP';
+  type: 'IPS QR' | 'OTP';
   date: string;
 };
 
 export const transactions: Transaction[] = [
-  { id: 'TXN72901', merchant: 'CMC Branch Cafe', operator: 'Abebe Bikila', amount: 150.00, status: 'Completed', type: 'QR', date: '2023-10-27T10:00:00Z' },
+  { id: 'TXN72901', merchant: 'CMC Branch Cafe', operator: 'Abebe Bikila', amount: 150.00, status: 'Completed', type: 'IPS QR', date: '2023-10-27T10:00:00Z' },
   { id: 'TXN72902', merchant: 'Bole Express', operator: 'Tirunesh Dibaba', amount: 320.50, status: 'Completed', type: 'OTP', date: '2023-10-27T11:30:00Z' },
-  { id: 'TXN72903', merchant: 'Saris Supermarket', operator: 'Kenenisa Bekele', amount: 1200.75, status: 'Pending', type: 'QR', date: '2023-10-27T12:15:00Z' },
-  { id: 'TXN72904', merchant: 'CMC Branch Cafe', operator: 'Abebe Bikila', amount: 85.25, status: 'Completed', type: 'QR', date: '2023-10-27T14:05:00Z' },
+  { id: 'TXN72903', merchant: 'Saris Supermarket', operator: 'Kenenisa Bekele', amount: 1200.75, status: 'Pending', type: 'IPS QR', date: '2023-10-27T12:15:00Z' },
+  { id: 'TXN72904', merchant: 'CMC Branch Cafe', operator: 'Abebe Bikila', amount: 85.25, status: 'Completed', type: 'IPS QR', date: '2023-10-27T14:05:00Z' },
   { id: 'TXN72905', merchant: 'Gift Gallery', operator: 'Gelete Burka', amount: 550.00, status: 'Failed', type: 'OTP', date: '2023-10-27T15:20:00Z' },
-  { id: 'TXN72906', merchant: 'Bole Express', operator: 'Tirunesh Dibaba', amount: 45.00, status: 'Reconciled', type: 'QR', date: '2023-10-26T09:45:00Z' },
-  { id: 'TXN72907', merchant: 'Saris Supermarket', operator: 'Kenenisa Bekele', amount: 780.30, status: 'Completed', type: 'QR', date: '2023-10-26T18:30:00Z' },
+  { id: 'TXN72906', merchant: 'Bole Express', operator: 'Tirunesh Dibaba', amount: 45.00, status: 'Reconciled', type: 'IPS QR', date: '2023-10-26T09:45:00Z' },
+  { id: 'TXN72907', merchant: 'Saris Supermarket', operator: 'Kenenisa Bekele', amount: 780.30, status: 'Completed', type: 'IPS QR', date: '2023-10-26T18:30:00Z' },
   { id: 'TXN72908', merchant: 'CMC Branch Cafe', operator: 'Abebe Bikila', amount: 200.00, status: 'Completed', type: 'OTP', date: '2023-10-26T19:00:00Z' },
-  { id: 'TXN72909', merchant: 'Bole Express', operator: 'Tirunesh Dibaba', amount: 105.00, status: 'Pending', type: 'QR', date: '2023-10-28T08:00:00Z' },
+  { id: 'TXN72909', merchant: 'Bole Express', operator: 'Tirunesh Dibaba', amount: 105.00, status: 'Pending', type: 'IPS QR', date: '2023-10-28T08:00:00Z' },
   { id: 'TXN72910', merchant: 'Gift Gallery', operator: 'Gelete Burka', amount: 950.00, status: 'Completed', type: 'OTP', date: '2023-10-28T09:10:00Z' },
 ];
 

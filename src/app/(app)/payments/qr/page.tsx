@@ -64,20 +64,20 @@ export default function QrPaymentPage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-        <Header title="Generate QR Payment" />
+        <Header title="Generate IPS QR Payment" />
         <main className="flex flex-1 flex-col items-center gap-4 p-4 md:gap-8 md:p-8">
             <Card className="w-full max-w-md">
                 {qrCodeUrl ? (
                     <>
                         <CardHeader>
-                            <CardTitle>Payment QR Code</CardTitle>
+                            <CardTitle>Payment IPS QR Code</CardTitle>
                             <CardDescription>
                                 Customer can scan this code to pay.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="flex flex-col items-center justify-center gap-4">
                             <div className="p-4 bg-white rounded-lg">
-                                <Image src={qrCodeUrl} alt="Generated QR Code" width={300} height={300} />
+                                <Image src={qrCodeUrl} alt="Generated IPS QR Code" width={300} height={300} />
                             </div>
                             <div className="text-center">
                                 <p className="font-semibold text-lg">{operator?.merchant}</p>
@@ -88,7 +88,7 @@ export default function QrPaymentPage() {
                             </div>
                         </CardContent>
                         <CardFooter className='flex-col gap-4'>
-                            <Button onClick={handleNewQr} className='w-full'>Generate New QR Code</Button>
+                            <Button onClick={handleNewQr} className='w-full'>Generate New IPS QR</Button>
                             <Button variant="link" asChild><Link href="/dashboard"><ArrowLeft className="mr-2 h-4 w-4"/>Back to Dashboard</Link></Button>
                         </CardFooter>
                     </>
@@ -96,7 +96,7 @@ export default function QrPaymentPage() {
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                              <CardHeader>
-                                <CardTitle>Generate QR Payment</CardTitle>
+                                <CardTitle>Generate IPS QR Payment</CardTitle>
                                 <CardDescription>
                                     Select an operator and enter the amount to generate a payment QR code.
                                 </CardDescription>
@@ -141,7 +141,7 @@ export default function QrPaymentPage() {
                              <CardFooter>
                                 <Button type="submit" disabled={isGenerating} className="w-full">
                                     {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Generate QR Code
+                                    Generate IPS QR Code
                                 </Button>
                             </CardFooter>
                         </form>
