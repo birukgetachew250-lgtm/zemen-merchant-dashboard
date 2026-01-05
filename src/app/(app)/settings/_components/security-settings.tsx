@@ -1,0 +1,55 @@
+
+'use client';
+
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+  } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+
+export function SecuritySettings() {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Security Settings</CardTitle>
+                <CardDescription>Manage your password and two-factor authentication.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="space-y-4">
+                    <h3 className="font-medium">Change Password</h3>
+                    <div className="space-y-2">
+                        <Label htmlFor="current-password">Current Password</Label>
+                        <Input id="current-password" type="password" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="new-password">New Password</Label>
+                        <Input id="new-password" type="password" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="confirm-password">Confirm New Password</Label>
+                        <Input id="confirm-password" type="password" />
+                    </div>
+                    <Button>Update Password</Button>
+                </div>
+                <Separator />
+                <div className="space-y-4">
+                    <h3 className="font-medium">Two-Factor Authentication (2FA)</h3>
+                    <div className="flex items-center justify-between rounded-lg border p-4">
+                        <div>
+                            <p className="font-medium">Enable 2FA</p>
+                            <p className="text-sm text-muted-foreground">Add an extra layer of security to your account.</p>
+                        </div>
+                        <Switch />
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
