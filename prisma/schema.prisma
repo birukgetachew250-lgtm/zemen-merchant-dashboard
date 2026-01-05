@@ -10,150 +10,114 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Merchant {
-  id                String   @id @default(cuid())
-  name              String
-  contactPerson     String
-  contactPhone      String
-  email             String   @unique
-  address           String
-  businessLicense   String
-  companyRegistration String
-  onboardingDate    DateTime @default(now())
-  
-  status            OnboardingStatus @default(PENDING)
-
-  branchId          String
-  branch            Branch   @relation(fields: [branchId], references: [id])
-
-  operators         Operator[]
-
-  transactions      Transaction[]
-
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-}
-
-model Operator {
-  id               String      @id @default(cuid())
-  name             String
-  contactPhone     String
-  email            String      @unique
-  bankAccount      String      @unique
-  
-  status           OperatorStatus @default(ACTIVE)
-
-  merchantId       String
-  merchant         Merchant    @relation(fields: [merchantId], references: [id])
-  
-  branchId         String
-  branch           Branch      @relation(fields: [branchId], references: [id])
-
-  transactions     Transaction[]
-
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-}
-
-model Transaction {
-  id              String      @id @default(cuid())
-  amount          Float
-  type            TransactionType
-  status          TransactionStatus @default(PENDING)
-  date            DateTime    @default(now())
-  
-  merchantId      String
-  merchant        Merchant    @relation(fields: [merchantId], references: [id])
-  
-  operatorId      String
-  operator        Operator    @relation(fields: [operatorId], references: [id])
-
-  paymentProvider String?
-  customerIdentifier String? // Phone or bank account
-  referenceId     String?     @unique // From payment provider
-
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-}
-
 model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
-  password  String // Hashed password
-  
-  status    UserStatus @default(PENDING)
-
+  username  String   @unique
+  password  String
   roleId    String
   role      Role     @relation(fields: [roleId], references: [id])
-
   branchId  String
   branch    Branch   @relation(fields: [branchId], references: [id])
-
+  status    String // Active, Pending, Inactive
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Role {
-  id          String   @id @unique
-  name        String   @unique
-  description String
-  permissions String[]
+  id          String           @id
+  name        String           @unique
+  description String?
   users       User[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Permission {
+  id          String           @id
+  label       String
+  roles       RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
 }
 
 model Branch {
-  id        String   @id @default(cuid())
+  id        String   @id
   name      String   @unique
   location  String
-  
   users     User[]
-  merchants Merchant[]
-  operators Operator[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model GatewayConfig {
-    id        String @id @default(cuid())
-    publicKey String
-    secretKey String
-    testMode  Boolean @default(true)
+model Merchant {
+  id              String        @id
+  name            String
+  branch          String
+  status          String // Approved, Pending, Rejected
+  onboardingDate  DateTime
+  operatorCount   Int
+  operators       Operator[]
+  transactions    Transaction[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
-model ApprovalWorkflow {
-    id        String @id @default(cuid())
-    name      String @unique // e.g., "Merchant Onboarding"
-    steps     Json // Array of step identifiers like ["compliance", "management"]
+model Operator {
+  id               String        @id
+  name             String
+  merchantId       String
+  merchant         Merchant      @relation(fields: [merchantId], references: [id])
+  branch           String
+  salesVolume      Float
+  transactionCount Int
+  successRate      Float
+  status           String // Active, Inactive, Blocked
+  bankAccount      String        @unique
+  transactions     Transaction[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 }
 
-enum OnboardingStatus {
-  PENDING
-  APPROVED
-  REJECTED
+model Transaction {
+  id         String   @id
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id])
+  operatorId String
+  operator   Operator @relation(fields: [operatorId], references: [id])
+  amount     Float
+  status     String // Completed, Pending, Failed, Reconciled
+  type       String // IPS_QR, OTP
+  date       DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
-enum OperatorStatus {
-  ACTIVE
-  INACTIVE
-  BLOCKED
+// For merchant onboarding approval workflow
+model WorkflowStep {
+  id          String   @id // e.g., 'compliance', 'management'
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  onboardingWorkflows OnboardingWorkflow[]
 }
 
-enum TransactionType {
-  IPS_QR
-  OTP
-  MOBILE_MONEY
-  BANK_TRANSFER
-}
-
-enum TransactionStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  RECONCILED
-  DISPUTED
-}
-
-enum UserStatus {
-  ACTIVE
-  PENDING
-  INACTIVE
+model OnboardingWorkflow {
+  id      Int @id @default(autoincrement())
+  stepId  String
+  step    WorkflowStep @relation(fields: [stepId], references: [id])
+  order   Int
+  
+  @@unique([stepId, order])
 }
