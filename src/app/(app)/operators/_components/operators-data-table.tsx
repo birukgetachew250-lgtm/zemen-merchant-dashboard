@@ -11,7 +11,7 @@ import {
   SortingState,
   useReactTable,
   ColumnFiltersState,
-} from '@tanstack-react-table';
+} from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 
 import {
