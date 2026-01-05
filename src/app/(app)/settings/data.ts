@@ -91,10 +91,23 @@ export type User = {
     email: string;
     role: string;
     status: 'Active' | 'Pending' | 'Inactive';
+    branch: string;
 }
 
+export type Branch = {
+    id: string;
+    name: string;
+    location: string;
+}
+
+export const defaultBranches: Branch[] = [
+    { id: 'BRANCH-001', name: 'Head Office', location: 'Addis Ababa' },
+    { id: 'BRANCH-002', name: 'Bole Branch', location: 'Bole, Addis Ababa' },
+    { id: 'BRANCH-003', name: 'Mekelle Branch', location: 'Mekelle' },
+];
+
 export const defaultUsers: User[] = [
-    { id: 'USER-001', name: 'Bank Admin', email: 'admin@zemenbank.com', role: 'admin', status: 'Active' },
-    { id: 'USER-002', name: 'Sales Manager', email: 'manager@zemenbank.com', role: 'manager', status: 'Active' },
-    { id: 'USER-003', name: 'Customer Support', email: 'support@zemenbank.com', role: 'support', status: 'Active' },
+    { id: 'USER-001', name: 'Bank Admin', email: 'admin@zemenbank.com', role: 'admin', status: 'Active', branch: 'Head Office' },
+    { id: 'USER-002', name: 'Sales Manager', email: 'manager@zemenbank.com', role: 'manager', status: 'Active', branch: 'Bole Branch' },
+    { id: 'USER-003', name: 'Customer Support', email: 'support@zemenbank.com', role: 'support', status: 'Active', branch: 'Head Office' },
 ];

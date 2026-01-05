@@ -29,7 +29,8 @@ import {
   ShieldCheck,
   FileCog,
   KeyRound,
-  UserCircle
+  UserCircle,
+  Building
 } from 'lucide-react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 
@@ -47,6 +48,7 @@ const settingsMenuItems = [
     { href: '/settings/profile', label: 'Profile', icon: UserCircle },
     { href: '/settings/users', label: 'Users', icon: Users },
     { href: '/settings/roles', label: 'Roles & Permissions', icon: UserCog },
+    { href: '/settings/branches', label: 'Branches', icon: Building },
     { href: '/settings/workflows', label: 'Workflows', icon: FileCog },
     { href: '/settings/security', label: 'Security', icon: KeyRound },
 ]

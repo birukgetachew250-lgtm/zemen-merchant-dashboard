@@ -33,46 +33,30 @@ import {
   } from "@/components/ui/card"
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { defaultUsers, User } from '../data';
-import { InviteUserDialog } from './invite-user-dialog';
+import { defaultBranches, Branch } from '../data';
+import { CreateBranchDialog } from './create-branch-dialog';
 
 
-export function UserManagement() {
-    const [users, setUsers] = React.useState<User[]>(defaultUsers);
-    const [isInviteOpen, setIsInviteOpen] = React.useState(false);
+export function BranchManagement() {
+    const [branches, setBranches] = React.useState<Branch[]>(defaultBranches);
+    const [isCreateOpen, setIsCreateOpen] = React.useState(false);
 
-    const handleAddUser = (newUser: { name: string, email: string, role: string, branch: string }) => {
-        const user: User = {
-            id: `USER-${Math.random().toString(36).substr(2, 9)}`,
-            ...newUser,
-            status: 'Pending'
+    const handleAddBranch = (newBranch: { name: string, location: string }) => {
+        const branch: Branch = {
+            id: `BRANCH-${Math.random().toString(36).substr(2, 9)}`,
+            ...newBranch,
         };
-        setUsers(currentUsers => [...currentUsers, user]);
+        setBranches(currentBranches => [...currentBranches, branch]);
     }
 
-    const columns: ColumnDef<User>[] = [
+    const columns: ColumnDef<Branch>[] = [
         {
           accessorKey: 'name',
-          header: 'Name',
+          header: 'Branch Name',
         },
         {
-          accessorKey: 'email',
-          header: 'Email',
-        },
-        {
-          accessorKey: 'role',
-          header: 'Role',
-          cell: ({ row }) => <div className="capitalize">{row.original.role}</div>,
-        },
-        {
-            accessorKey: 'branch',
-            header: 'Branch',
-        },
-        {
-            accessorKey: 'status',
-            header: 'Status',
-            cell: ({ row }) => <Badge variant={row.original.status === 'Active' ? 'default' : 'secondary'}>{row.original.status}</Badge>,
+          accessorKey: 'location',
+          header: 'Location',
         },
         {
           id: 'actions',
@@ -86,9 +70,8 @@ export function UserManagement() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem>Edit User</DropdownMenuItem>
-                <DropdownMenuItem>Resend Invitation</DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive">Deactivate User</DropdownMenuItem>
+                <DropdownMenuItem>Edit Branch</DropdownMenuItem>
+                <DropdownMenuItem className="text-destructive">Delete Branch</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ),
@@ -96,30 +79,30 @@ export function UserManagement() {
       ];
 
     const table = useReactTable({
-        data: users,
+        data: branches,
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
 
     return (
         <>
-            <InviteUserDialog
-                isOpen={isInviteOpen}
-                onOpenChange={setIsInviteOpen}
-                onInviteUser={handleAddUser}
+            <CreateBranchDialog
+                isOpen={isCreateOpen}
+                onOpenChange={setIsCreateOpen}
+                onCreateBranch={handleAddBranch}
             />
             <Card>
                 <CardHeader className="flex flex-row items-center">
                     <div className="grid gap-2">
-                        <CardTitle>User Management</CardTitle>
+                        <CardTitle>Branch Management</CardTitle>
                         <CardDescription>
-                            Invite and manage user roles and permissions.
+                            Add, view, and manage bank branches.
                         </CardDescription>
                     </div>
-                    <Button asChild className="ml-auto gap-1" onClick={() => setIsInviteOpen(true)}>
+                    <Button asChild className="ml-auto gap-1" onClick={() => setIsCreateOpen(true)}>
                         <div className="cursor-pointer">
                             <PlusCircle className="h-4 w-4" />
-                            Invite User
+                            Add Branch
                         </div>
                     </Button>
                 </CardHeader>
@@ -153,7 +136,7 @@ export function UserManagement() {
                         ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                            No users found.
+                            No branches found.
                             </TableCell>
                         </TableRow>
                         )}
@@ -165,3 +148,4 @@ export function UserManagement() {
         </>
     );
 }
+

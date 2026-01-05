@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { defaultRoles } from '../data';
+import { defaultRoles, defaultBranches } from '../data';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
@@ -32,6 +32,7 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "Full name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   role: z.string({ required_error: 'Please select a role.' }),
+  branch: z.string({ required_error: 'Please select a branch.' }),
 });
 
 interface InviteUserDialogProps {
@@ -69,6 +70,7 @@ export function InviteUserDialog({ isOpen, onOpenChange, onInviteUser }: InviteU
     const handleOpenChange = (open: boolean) => {
         if (!isSending) {
             onOpenChange(open);
+            form.reset();
         }
     };
 
@@ -125,6 +127,28 @@ export function InviteUserDialog({ isOpen, onOpenChange, onInviteUser }: InviteU
                                         <SelectContent>
                                         {defaultRoles.map(role => (
                                             <SelectItem key={role.id} value={role.id} className="capitalize">{role.name}</SelectItem>
+                                        ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="branch"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Branch</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a branch" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                        {defaultBranches.map(branch => (
+                                            <SelectItem key={branch.id} value={branch.name}>{branch.name}</SelectItem>
                                         ))}
                                         </SelectContent>
                                     </Select>
