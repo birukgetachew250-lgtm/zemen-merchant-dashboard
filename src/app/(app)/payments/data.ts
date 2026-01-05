@@ -17,3 +17,4 @@ export const paymentProviders: PaymentProvider[] = [
     { id: 'zemen', name: 'Zemen Bank', type: 'bank', logoUrl: '/logo.png' },
 ]
 
+
