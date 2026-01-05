@@ -22,7 +22,6 @@ import {
   Building2,
   LifeBuoy,
 } from 'lucide-react';
-import { Button } from '../ui/button';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -47,17 +46,19 @@ export function SidebarNav() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === item.href}
-                tooltip={item.label}
-                className="justify-start"
-              >
-                <Link href={item.href}>
-                  <item.icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </Link>
-              </SidebarMenuButton>
+              <Link href={item.href} passHref>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === item.href}
+                  tooltip={item.label}
+                  className="justify-start"
+                >
+                  <div>
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                  </div>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -66,14 +67,18 @@ export function SidebarNav() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === '/settings'} tooltip="Settings" className="justify-start">
-              <Link href="/settings"><Settings className="h-4 w-4" /><span>Settings</span></Link>
-            </SidebarMenuButton>
+            <Link href="/settings" passHref>
+              <SidebarMenuButton asChild isActive={pathname === '/settings'} tooltip="Settings" className="justify-start">
+                  <div><Settings className="h-4 w-4" /><span>Settings</span></div>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
           <SidebarMenuItem>
-             <SidebarMenuButton asChild tooltip="Support" className="justify-start">
-                <Link href="#"><LifeBuoy className="h-4 w-4" /><span>Support</span></Link>
-              </SidebarMenuButton>
+             <Link href="#" passHref>
+                <SidebarMenuButton asChild tooltip="Support" className="justify-start">
+                    <div><LifeBuoy className="h-4 w-4" /><span>Support</span></div>
+                </SidebarMenuButton>
+              </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
