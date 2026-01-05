@@ -18,80 +18,92 @@ model User {
   password  String
   roleId    String
   role      Role     @relation(fields: [roleId], references: [id])
-  status    String
   branchId  String
   branch    Branch   @relation(fields: [branchId], references: [id])
+  status    String // Active, Inactive, etc.
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Role {
-  id          String           @id
-  name        String           @unique
-  description String?
-  permissions RolePermission[]
-  users       User[]
+  id              String           @id @default(cuid())
+  name            String           @unique
+  description     String
+  permissions     RolePermission[]
+  users           User[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model Permission {
-  id          String           @id
-  label       String
-  roles       RolePermission[]
+  id              String           @id
+  label           String
+  roles           RolePermission[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model RolePermission {
-  roleId       String
-  permissionId String
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-  createdAt    DateTime   @default(now())
+  roleId          String
+  permissionId    String
+  role            Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission      Permission       @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt       DateTime         @default(now())
 
   @@id([roleId, permissionId])
 }
 
 model Branch {
-  id       String @id @default(cuid())
-  name     String
-  location String
-  users    User[]
+  id        String   @id @default(cuid())
+  name      String
+  location  String
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Merchant {
-  id             String     @id @default(cuid())
+  id             String    @id @default(cuid())
   name           String
   branch         String
   status         String
-  onboardingDate DateTime   @default(now())
+  onboardingDate DateTime  @default(now())
   operatorCount  Int
   operators      Operator[]
   transactions   Transaction[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Operator {
-  id               String        @id @default(cuid())
-  name             String
-  merchantId       String
-  merchant         Merchant      @relation(fields: [merchantId], references: [id])
-  branch           String
-  salesVolume      Float
-  transactionCount Int
-  successRate      Float
-  status           String
-  bankAccount      String        @unique
-  transactions     Transaction[]
+  id                 String    @id @default(cuid())
+  name               String
+  merchantId         String
+  merchant           Merchant @relation(fields: [merchantId], references: [id])
+  branch             String
+  salesVolume        Float
+  transactionCount   Int
+  successRate        Float
+  status             String // Active, Inactive, Blocked
+  bankAccount        String
+  transactions       Transaction[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model Transaction {
-  id         String   @id @default(cuid())
-  merchantId String
-  merchant   Merchant @relation(fields: [merchantId], references: [id])
-  operatorId String
-  operator   Operator @relation(fields: [operatorId], references: [id])
-  amount     Float
-  status     String
-  type       String
-  date       DateTime @default(now())
-  disputes   Dispute[]
+  id          String   @id @default(cuid())
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  operatorId  String
+  operator    Operator @relation(fields: [operatorId], references: [id])
+  amount      Float
+  status      String // Completed, Pending, Failed, Reconciled
+  type        String // IPS QR, OTP, etc.
+  date        DateTime @default(now())
+  disputes    Dispute[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Dispute {
@@ -99,7 +111,7 @@ model Dispute {
   transactionId String
   transaction   Transaction @relation(fields: [transactionId], references: [id])
   reason        String
-  status        String      // e.g., OPEN, RESOLVED, REJECTED
+  status        String      // OPEN, RESOLVED, CLOSED
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
