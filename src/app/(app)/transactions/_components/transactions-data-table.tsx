@@ -75,7 +75,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'date',
     header: 'Date',
-    cell: ({ row }) => new Date(row.original.date).toLocaleString(),
+    cell: ({ row }) => new Date(row.original.date).toLocaleDateString(),
   },
   {
     id: "actions",
