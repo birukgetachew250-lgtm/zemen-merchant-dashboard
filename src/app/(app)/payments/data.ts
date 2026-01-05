@@ -13,6 +13,7 @@ export const paymentProviders: PaymentProvider[] = [
     { id: 'hellocash', name: 'HelloCash', type: 'wallet', logoUrl: '/wallet/hellocash.png' },
     { id: 'boa', name: 'Bank of Abyssinia', type: 'bank', logoUrl: '/banks/Bank of Abyssinia Logo.png' },
     { id: 'awash', name: 'Awash Bank', type: 'bank', logoUrl: '/banks/awash bank.png' },
-    { id: 'dashen', name: 'Dashen Bank', type: 'bank', logoUrl: '/banks/dashen.png' },
+    { id: 'dashen', name: 'Dashen Bank', type: 'bank', logoUrl: '/banks/dashen bank.png' },
     { id: 'zemen', name: 'Zemen Bank', type: 'bank', logoUrl: '/logo.png' },
 ]
+
