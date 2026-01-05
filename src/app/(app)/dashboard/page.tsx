@@ -4,7 +4,6 @@ import {
     CreditCard,
     DollarSign,
     Users,
-    QrCode,
     KeyRound
   } from "lucide-react"
   
@@ -34,6 +33,7 @@ import {
   import { dashboardStats, transactions, transactionVolumeByDay } from "@/lib/data"
   import { formatCurrency } from "@/lib/utils"
   import { TransactionVolumeChart } from "./_components/transaction-volume-chart"
+import { QrPaymentDialog } from "./_components/qr-payment-dialog"
   
   export default function DashboardPage() {
     const recentTransactions = transactions.slice(0, 5);
@@ -143,7 +143,7 @@ import {
                             {tx.type}
                           </Badge>
                         </TableCell>
-                        <TableCell className="hidden xl:table-column">
+                        <TableCell className="hidden xl_table-column">
                           <Badge className="text-xs" variant="outline">
                             {tx.status}
                           </Badge>
@@ -165,10 +165,7 @@ import {
                     <CardDescription>Generate payments instantly.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" size="lg" className="h-auto py-4 flex-col gap-2">
-                        <QrCode className="h-6 w-6"/>
-                        <span>QR Payment</span>
-                    </Button>
+                    <QrPaymentDialog />
                      <Button variant="outline" size="lg" className="h-auto py-4 flex-col gap-2">
                         <KeyRound className="h-6 w-6"/>
                         <span>OTP Payment</span>

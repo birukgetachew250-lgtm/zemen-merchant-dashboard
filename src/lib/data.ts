@@ -48,14 +48,15 @@ export type Operator = {
     transactionCount: number;
     successRate: number;
     status: 'Active' | 'Inactive' | 'Blocked';
+    bankAccount: string;
 }
 
 export const operators: Operator[] = [
-    { id: 'OP-001', name: 'Abebe Bikila', merchant: 'CMC Branch Cafe', branch: 'CMC', salesVolume: 12500, transactionCount: 150, successRate: 98.5, status: 'Active' },
-    { id: 'OP-002', name: 'Tirunesh Dibaba', merchant: 'Bole Express', branch: 'Bole', salesVolume: 25000, transactionCount: 300, successRate: 99.1, status: 'Active' },
-    { id: 'OP-003', name: 'Kenenisa Bekele', merchant: 'Saris Supermarket', branch: 'Saris', salesVolume: 8000, transactionCount: 90, successRate: 97.2, status: 'Inactive' },
-    { id: 'OP-004', name: 'Gelete Burka', merchant: 'Gift Gallery', branch: 'Hayahulet', salesVolume: 18000, transactionCount: 200, successRate: 99.8, status: 'Active' },
-    { id: 'OP-005', name: 'Haile Gebrselassie', merchant: 'Bole Express', branch: 'Bole', salesVolume: 35000, transactionCount: 450, successRate: 99.5, status: 'Blocked' },
+    { id: 'OP-001', name: 'Abebe Bikila', merchant: 'CMC Branch Cafe', branch: 'CMC', salesVolume: 12500, transactionCount: 150, successRate: 98.5, status: 'Active', bankAccount: '1000012345678' },
+    { id: 'OP-002', name: 'Tirunesh Dibaba', merchant: 'Bole Express', branch: 'Bole', salesVolume: 25000, transactionCount: 300, successRate: 99.1, status: 'Active', bankAccount: '1000023456789' },
+    { id: 'OP-003', name: 'Kenenisa Bekele', merchant: 'Saris Supermarket', branch: 'Saris', salesVolume: 8000, transactionCount: 90, successRate: 97.2, status: 'Inactive', bankAccount: '1000034567890' },
+    { id: 'OP-004', name: 'Gelete Burka', merchant: 'Gift Gallery', branch: 'Hayahulet', salesVolume: 18000, transactionCount: 200, successRate: 99.8, status: 'Active', bankAccount: '1000045678901' },
+    { id: 'OP-005', name: 'Haile Gebrselassie', merchant: 'Bole Express', branch: 'Bole', salesVolume: 35000, transactionCount: 450, successRate: 99.5, status: 'Blocked', bankAccount: '1000056789012' },
 ]
 
 export const dashboardStats = {
