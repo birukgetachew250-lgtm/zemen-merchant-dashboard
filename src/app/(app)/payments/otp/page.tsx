@@ -16,12 +16,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { operators } from '@/lib/data';
 import { Loader2 } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { Operator } from '@prisma/client';
 
 const formSchema = z.object({
   operatorId: z.string({ required_error: 'Please select an operator.' }),
@@ -33,6 +33,12 @@ export default function OtpPaymentPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSending, setIsSending] = React.useState(false);
+  const [operators, setOperators] = React.useState<Operator[]>([]);
+
+  // Fetch operators - in a real app this would be an API call
+  React.useEffect(() => {
+    // setOperators(activeOperators)
+  }, [])
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,7 +94,7 @@ export default function OtpPaymentPage() {
                                         </FormControl>
                                         <SelectContent>
                                         {operators.filter(op => op.status === 'Active').map(op => (
-                                            <SelectItem key={op.id} value={op.id}>{op.name} - {op.merchant}</SelectItem>
+                                            <SelectItem key={op.id} value={op.id}>{op.name} - {op.merchantId}</SelectItem>
                                         ))}
                                         </SelectContent>
                                     </Select>

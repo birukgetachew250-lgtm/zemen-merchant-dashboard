@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -24,7 +25,6 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Operator } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatCurrency } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Operator } from '@prisma/client';
 
 const getInitials = (name: string) => {
     const names = name.split(' ');
@@ -45,7 +46,11 @@ const getInitials = (name: string) => {
     return name.substring(0, 2);
 }
 
-export const columns: ColumnDef<Operator>[] = [
+export type OperatorWithMerchant = Operator & {
+    merchant: { name: string };
+}
+
+export const columns: ColumnDef<OperatorWithMerchant>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -62,6 +67,7 @@ export const columns: ColumnDef<Operator>[] = [
   {
     accessorKey: 'merchant',
     header: 'Merchant',
+    cell: ({row}) => row.original.merchant.name
   },
   {
     accessorKey: 'branch',
@@ -111,7 +117,7 @@ export const columns: ColumnDef<Operator>[] = [
 ];
 
 interface DataTableProps {
-  data: Operator[];
+  data: OperatorWithMerchant[];
 }
 
 export function OperatorsDataTable({ data }: DataTableProps) {

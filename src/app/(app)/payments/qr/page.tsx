@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -15,13 +16,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { operators } from '@/lib/data';
 import Image from 'next/image';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { constructQrCodeString } from '@/lib/utils';
 import { Header } from '@/components/layout/header';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { Operator } from '@prisma/client';
 
 const formSchema = z.object({
   operatorId: z.string({ required_error: 'Please select an operator.' }),
@@ -31,6 +32,7 @@ const formSchema = z.object({
 export default function QrPaymentPage() {
   const [qrCodeUrl, setQrCodeUrl] = React.useState<string | null>(null);
   const [isGenerating, setIsGenerating] = React.useState(false);
+  const [operators, setOperators] = React.useState<Operator[]>([]);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,7 +47,7 @@ export default function QrPaymentPage() {
     setIsGenerating(true);
     setQrCodeUrl(null);
 
-    const qrData = constructQrCodeString(operator.bankAccount, operator.merchant, values.amount);
+    const qrData = constructQrCodeString(operator.bankAccount, 'Merchant Name', values.amount);
     
     // Using a timeout to give the UI time to update before the API call,
     // which can sometimes block the main thread briefly.
@@ -80,7 +82,7 @@ export default function QrPaymentPage() {
                                 <Image src={qrCodeUrl} alt="Generated IPS QR Code" width={300} height={300} />
                             </div>
                             <div className="text-center">
-                                <p className="font-semibold text-lg">{operator?.merchant}</p>
+                                <p className="font-semibold text-lg">{operator?.merchantId}</p>
                                 <p className="text-sm text-muted-foreground">Operator: {operator?.name}</p>
                                 <p className="text-2xl font-bold mt-2">
                                     {form.getValues('amount').toLocaleString('en-US', { style: 'currency', currency: 'ETB' })}
@@ -116,7 +118,7 @@ export default function QrPaymentPage() {
                                             </FormControl>
                                             <SelectContent>
                                             {operators.filter(op => op.status === 'Active').map(op => (
-                                                <SelectItem key={op.id} value={op.id}>{op.name} - {op.merchant}</SelectItem>
+                                                <SelectItem key={op.id} value={op.id}>{op.name} - {op.merchantId}</SelectItem>
                                             ))}
                                             </SelectContent>
                                         </Select>

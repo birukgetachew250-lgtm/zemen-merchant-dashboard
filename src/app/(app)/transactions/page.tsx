@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/layout/header";
 import {
     Card,
@@ -6,10 +7,24 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-import { transactions } from "@/lib/data";
 import { TransactionsDataTable } from "./_components/transactions-data-table";
+import { prisma } from "@/lib/db";
 
-export default function TransactionsPage() {
+export default async function TransactionsPage() {
+    const transactions = await prisma.transaction.findMany({
+        include: {
+            merchant: {
+                select: { name: true }
+            },
+            operator: {
+                select: { name: true }
+            }
+        },
+        orderBy: {
+            date: 'desc'
+        }
+    });
+
     return (
         <div className="flex min-h-screen w-full flex-col">
             <Header title="Transactions" />

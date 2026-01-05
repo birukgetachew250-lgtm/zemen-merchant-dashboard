@@ -1,3 +1,4 @@
+
 import {
     Activity,
     ArrowUpRight,
@@ -7,12 +8,7 @@ import {
     KeyRound,
     QrCode
   } from "lucide-react"
-  
-  import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-  } from "@/components/ui/avatar"
+import { prisma } from "@/lib/db";
   import { Badge } from "@/components/ui/badge"
   import { Button } from "@/components/ui/button"
   import {
@@ -31,13 +27,53 @@ import {
     TableRow,
   } from "@/components/ui/table"
   import { Header } from "@/components/layout/header"
-  import { dashboardStats, transactions, transactionVolumeByDay } from "@/lib/data"
   import { formatCurrency } from "@/lib/utils"
   import { TransactionVolumeChart } from "./_components/transaction-volume-chart"
 import Link from "next/link"
+import { subDays } from "date-fns";
   
-  export default function DashboardPage() {
-    const recentTransactions = transactions.slice(0, 5);
+  export default async function DashboardPage() {
+    const totalVolume = await prisma.transaction.aggregate({
+        _sum: {
+            amount: true
+        }
+    });
+
+    const totalTransactions = await prisma.transaction.count();
+
+    const thirtyDaysAgo = subDays(new Date(), 30);
+    const newMerchants = await prisma.merchant.count({
+        where: {
+            onboardingDate: {
+                gte: thirtyDaysAgo
+            }
+        }
+    });
+
+    const activeDisputes = await prisma.dispute.count({
+        where: {
+            status: 'OPEN'
+        }
+    });
+    
+    const recentTransactions = await prisma.transaction.findMany({
+        take: 5,
+        orderBy: {
+            date: 'desc'
+        },
+        include: {
+            merchant: true,
+            operator: true,
+        }
+    });
+
+    const transactionVolumeByDay = await prisma.$queryRaw<Array<{ date: string; volume: number }>>`
+      SELECT TO_CHAR(date, 'Dy') as date, SUM(amount) as volume
+      FROM "Transaction"
+      WHERE date > date_trunc('week', now()) - interval '1 day'
+      GROUP BY date_trunc('day', date)
+      ORDER BY date_trunc('day', date);
+    `;
   
     return (
       <div className="flex min-h-screen w-full flex-col">
@@ -52,7 +88,7 @@ import Link from "next/link"
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{formatCurrency(dashboardStats.totalVolume)}</div>
+                <div className="text-2xl font-bold">{formatCurrency(totalVolume._sum.amount ?? 0)}</div>
                 <p className="text-xs text-muted-foreground">
                   +20.1% from last month
                 </p>
@@ -66,7 +102,7 @@ import Link from "next/link"
                 <CreditCard className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+{dashboardStats.totalTransactions}</div>
+                <div className="text-2xl font-bold">+{totalTransactions}</div>
                 <p className="text-xs text-muted-foreground">
                   +180.1% from last month
                 </p>
@@ -78,7 +114,7 @@ import Link from "next/link"
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+{dashboardStats.newMerchants}</div>
+                <div className="text-2xl font-bold">+{newMerchants}</div>
                 <p className="text-xs text-muted-foreground">
                   +19% from last month
                 </p>
@@ -90,7 +126,7 @@ import Link from "next/link"
                 <Activity className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+{dashboardStats.disputes}</div>
+                <div className="text-2xl font-bold">+{activeDisputes}</div>
                 <p className="text-xs text-muted-foreground">
                   +2 since last hour
                 </p>
@@ -134,9 +170,9 @@ import Link from "next/link"
                     {recentTransactions.map(tx => (
                        <TableRow key={tx.id}>
                         <TableCell>
-                          <div className="font-medium">{tx.merchant}</div>
+                          <div className="font-medium">{tx.merchant.name}</div>
                           <div className="hidden text-sm text-muted-foreground md:inline">
-                            {tx.operator}
+                            {tx.operator.name}
                           </div>
                         </TableCell>
                         <TableCell className="hidden xl:table-column">
@@ -195,4 +231,3 @@ import Link from "next/link"
       </div>
     )
   }
-  

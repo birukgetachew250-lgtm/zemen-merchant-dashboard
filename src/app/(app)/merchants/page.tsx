@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/layout/header";
 import {
     Card,
@@ -6,13 +7,14 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-import { merchants } from "@/lib/data";
 import { MerchantsDataTable } from "./_components/merchants-data-table";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { prisma } from "@/lib/db";
 
-export default function MerchantsPage() {
+export default async function MerchantsPage() {
+    const merchants = await prisma.merchant.findMany();
     return (
         <div className="flex min-h-screen w-full flex-col">
             <Header title="Merchants" />

@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -24,8 +25,6 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Merchant } from '@/lib/data';
-import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +33,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Merchant } from '@prisma/client';
 
 const StatusIcon = ({ status }: { status: Merchant['status'] }) => {
     switch (status) {

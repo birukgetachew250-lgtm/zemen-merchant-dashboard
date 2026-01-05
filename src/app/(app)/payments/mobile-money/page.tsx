@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -15,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { operators } from '@/lib/data';
 import { Loader2 } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +25,7 @@ import { paymentProviders, PaymentProvider } from '../data';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Operator } from '@prisma/client';
 
 const phoneRegex = /^(?:\+251|0)?[79]\d{8}$/;
 const bankAccountRegex = /^[0-9]{10,20}$/;
@@ -53,6 +54,7 @@ export default function MobileMoneyPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSending, setIsSending] = React.useState(false);
+  const [operators, setOperators] = React.useState<Operator[]>([]);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -111,7 +113,7 @@ export default function MobileMoneyPage() {
                                             </FormControl>
                                             <SelectContent>
                                             {operators.filter(op => op.status === 'Active').map(op => (
-                                                <SelectItem key={op.id} value={op.id}>{op.name} - {op.merchant}</SelectItem>
+                                                <SelectItem key={op.id} value={op.id}>{op.name} - {op.merchantId}</SelectItem>
                                             ))}
                                             </SelectContent>
                                         </Select>

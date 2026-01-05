@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -7,11 +8,11 @@ import { Loader2, ArrowLeft, CheckCircle } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { operators } from '@/lib/data';
 import { formatCurrency } from '@/lib/utils';
 import Link from 'next/link';
 import { paymentProviders } from '../../data';
 import Image from 'next/image';
+import { Operator } from '@prisma/client';
 
 const COUNTDOWN_SECONDS = 90;
 
@@ -28,7 +29,8 @@ export default function VerifyMobileMoneyPage() {
   const providerId = searchParams.get('provider');
   const identifier = searchParams.get('identifier');
   
-  const operator = operators.find(op => op.id === operatorId);
+  // In a real app this would be fetched from an API
+  const [operator, setOperator] = React.useState<Operator | null>(null);
   const provider = paymentProviders.find(p => p.id === providerId);
 
   React.useEffect(() => {
@@ -75,7 +77,7 @@ export default function VerifyMobileMoneyPage() {
   }, [status, amount, toast]);
 
 
-  if (!operator || !provider || !amount || !identifier) {
+  if (!provider || !amount || !identifier) {
     return (
         <div className="flex min-h-screen w-full flex-col items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin" />

@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -23,7 +24,6 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Transaction } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { formatCurrency } from '@/lib/utils';
 import {
@@ -34,19 +34,28 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SlidersHorizontal } from 'lucide-react';
 import { RowActions } from './row-actions';
+import { Transaction } from '@prisma/client';
 
-export const columns: ColumnDef<Transaction>[] = [
+export type TransactionWithRelations = Transaction & {
+    merchant: { name: string };
+    operator: { name: string };
+}
+
+export const columns: ColumnDef<TransactionWithRelations>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
+    cell: ({row}) => <div className="w-20 truncate">{row.original.id}</div>
   },
   {
     accessorKey: 'merchant',
     header: 'Merchant',
+    cell: ({ row }) => row.original.merchant.name,
   },
   {
     accessorKey: 'operator',
     header: 'Operator',
+    cell: ({ row }) => row.original.operator.name,
   },
   {
     accessorKey: 'amount',
@@ -79,22 +88,22 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <RowActions transaction={row.original} />,
+    cell: ({ row }) => <RowActions transaction={row.original as any} />,
   },
 ];
 
-interface DataTableProps<TData, TValue> {
-  data: TData[];
+interface DataTableProps {
+  data: TransactionWithRelations[];
 }
 
-export function TransactionsDataTable<TData, TValue>({
+export function TransactionsDataTable({
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
-    data: data as Transaction[],
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -134,7 +143,7 @@ export function TransactionsDataTable<TData, TValue>({
                         checked={column.getIsVisible()}
                         onCheckedChange={value => column.toggleVisibility(!!value)}
                     >
-                        {column.id}
+                        {typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id}
                     </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuContent>

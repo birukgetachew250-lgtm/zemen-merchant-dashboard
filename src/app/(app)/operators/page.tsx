@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/layout/header";
 import {
     Card,
@@ -6,13 +7,21 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-import { operators } from "@/lib/data";
 import { OperatorsDataTable } from "./_components/operators-data-table";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { prisma } from "@/lib/db";
 
-export default function OperatorsPage() {
+export default async function OperatorsPage() {
+    const operators = await prisma.operator.findMany({
+      include: {
+        merchant: {
+          select: { name: true }
+        }
+      }
+    });
+
     return (
         <div className="flex min-h-screen w-full flex-col">
             <Header title="Operators" />

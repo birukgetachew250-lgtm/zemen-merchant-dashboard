@@ -1,11 +1,25 @@
+
 'use server'
 
 import { detectTransactionAnomalies } from "@/ai/flows/detect-transaction-anomalies";
-import { transactions, Transaction } from "@/lib/data";
+import { prisma } from "@/lib/db";
+import type { Transaction } from '@prisma/client';
+
 
 export async function checkTransactionAnomaly(transaction: Transaction) {
   try {
-    const priorTransactions = transactions.filter(t => t.operator === transaction.operator && new Date(t.date) < new Date(transaction.date));
+    const priorTransactions = await prisma.transaction.findMany({
+        where: {
+            operatorId: transaction.operatorId,
+            date: {
+                lt: new Date(transaction.date)
+            }
+        },
+        take: 20,
+        orderBy: {
+            date: 'desc'
+        }
+    });
     
     const result = await detectTransactionAnomalies({
       transactionData: JSON.stringify(transaction),

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -28,7 +29,7 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { merchants } from '@/lib/data';
+import { Merchant } from '@prisma/client';
 
 const formSchema = z.object({
     operatorName: z.string().min(2, { message: "Operator name must be at least 2 characters." }),
@@ -42,6 +43,20 @@ export default function OnboardOperatorPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [merchants, setMerchants] = React.useState<Merchant[]>([]);
+
+  React.useEffect(() => {
+    // In a real app, this would be an API call
+    const fetchMerchants = async () => {
+        const res = await fetch('/api/merchants');
+        const data = await res.json();
+        setMerchants(data);
+    }
+    // For now, we use a static list
+    // fetchMerchants();
+  }, [])
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
