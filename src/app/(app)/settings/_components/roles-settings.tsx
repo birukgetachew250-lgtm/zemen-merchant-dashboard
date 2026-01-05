@@ -11,11 +11,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { defaultRoles } from '../data';
+import { defaultRoles, allPermissions, type Role } from '../data';
+import { PlusCircle } from 'lucide-react';
+import { CreateRoleDialog } from './create-role-dialog';
 
 
 export function RolesSettings() {
     const [roles, setRoles] = React.useState(defaultRoles);
+    const [isCreateOpen, setIsCreateOpen] = React.useState(false);
 
     const handlePermissionChange = (roleId: string, permissionId: string, checked: boolean) => {
         setRoles(currentRoles => 
@@ -31,11 +34,38 @@ export function RolesSettings() {
         );
     };
 
+    const handleCreateRole = (newRole: { name: string, description: string, permissions: string[] }) => {
+        const role: Role = {
+            id: newRole.name.toLowerCase().replace(/\s/g, '-'),
+            name: newRole.name,
+            description: newRole.description,
+            permissions: allPermissions.map(p => ({
+                ...p,
+                enabled: newRole.permissions.includes(p.id)
+            }))
+        };
+        setRoles(currentRoles => [...currentRoles, role]);
+    };
+
     return (
+        <>
+        <CreateRoleDialog 
+            isOpen={isCreateOpen}
+            onOpenChange={setIsCreateOpen}
+            onCreateRole={handleCreateRole}
+        />
         <Card>
-            <CardHeader>
-                <CardTitle>Roles & Permissions</CardTitle>
-                <CardDescription>Define what users can see and do within the application.</CardDescription>
+            <CardHeader className="flex flex-row items-center">
+                <div className="grid gap-2">
+                    <CardTitle>Roles & Permissions</CardTitle>
+                    <CardDescription>Define what users can see and do within the application.</CardDescription>
+                </div>
+                <Button asChild className="ml-auto gap-1" onClick={() => setIsCreateOpen(true)}>
+                    <div className='cursor-pointer'>
+                        <PlusCircle className="h-4 w-4" />
+                        Create Role
+                    </div>
+                </Button>
             </CardHeader>
             <CardContent>
                 <Accordion type="single" collapsible className="w-full">
@@ -75,5 +105,6 @@ export function RolesSettings() {
                 <Button>Save Permissions</Button>
             </CardFooter>
         </Card>
+        </>
     );
 }

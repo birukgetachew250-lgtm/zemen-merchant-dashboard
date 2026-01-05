@@ -9,6 +9,9 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   SidebarSeparator,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons';
 import { usePathname } from 'next/navigation';
@@ -22,7 +25,14 @@ import {
   Building2,
   LifeBuoy,
   Wallet,
+  UserCog,
+  ShieldCheck,
+  FileCog,
+  KeyRound,
+  UserCircle
 } from 'lucide-react';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -32,6 +42,14 @@ const menuItems = [
   { href: '/operators', label: 'Operators', icon: Users },
   { href: '/reports', label: 'Reports', icon: LineChart },
 ];
+
+const settingsMenuItems = [
+    { href: '/settings/profile', label: 'Profile', icon: UserCircle },
+    { href: '/settings/users', label: 'Users', icon: Users },
+    { href: '/settings/roles', label: 'Roles & Permissions', icon: UserCog },
+    { href: '/settings/workflows', label: 'Workflows', icon: FileCog },
+    { href: '/settings/security', label: 'Security', icon: KeyRound },
+]
 
 export function SidebarNav() {
   const pathname = usePathname();
@@ -68,13 +86,35 @@ export function SidebarNav() {
       <SidebarSeparator />
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <Link href="/settings" passHref>
-              <SidebarMenuButton asChild isActive={pathname === '/settings'} tooltip="Settings" className="justify-start">
+          <Collapsible asChild>
+            <SidebarMenuItem>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuButton
+                    isActive={pathname.startsWith('/settings')}
+                    tooltip="Settings"
+                    className="justify-start"
+                  >
                   <div><Settings className="h-4 w-4" /><span>Settings</span></div>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+               <CollapsibleContent asChild>
+                 <SidebarMenuSub>
+                    {settingsMenuItems.map((item) => (
+                        <SidebarMenuSubItem key={item.href}>
+                            <Link href={item.href} passHref>
+                                <SidebarMenuSubButton asChild isActive={pathname === item.href}>
+                                     <div>
+                                        <item.icon className="h-4 w-4" />
+                                        <span>{item.label}</span>
+                                    </div>
+                                </SidebarMenuSubButton>
+                            </Link>
+                        </SidebarMenuSubItem>
+                    ))}
+                 </SidebarMenuSub>
+                </CollapsibleContent>
+            </SidebarMenuItem>
+          </Collapsible>
           <SidebarMenuItem>
              <Link href="#" passHref>
                 <SidebarMenuButton asChild tooltip="Support" className="justify-start">
