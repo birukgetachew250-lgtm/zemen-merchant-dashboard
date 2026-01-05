@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Merchant {
+  id                String   @id @default(cuid())
+  name              String
+  contactPerson     String
+  contactPhone      String
+  email             String   @unique
+  address           String
+  businessLicense   String
+  companyRegistration String
+  onboardingDate    DateTime @default(now())
+  
+  status            OnboardingStatus @default(PENDING)
+
+  branchId          String
+  branch            Branch   @relation(fields: [branchId], references: [id])
+
+  operators         Operator[]
+
+  transactions      Transaction[]
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Operator {
+  id               String      @id @default(cuid())
+  name             String
+  contactPhone     String
+  email            String      @unique
+  bankAccount      String      @unique
+  
+  status           OperatorStatus @default(ACTIVE)
+
+  merchantId       String
+  merchant         Merchant    @relation(fields: [merchantId], references: [id])
+  
+  branchId         String
+  branch           Branch      @relation(fields: [branchId], references: [id])
+
+  transactions     Transaction[]
+
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model Transaction {
+  id              String      @id @default(cuid())
+  amount          Float
+  type            TransactionType
+  status          TransactionStatus @default(PENDING)
+  date            DateTime    @default(now())
+  
+  merchantId      String
+  merchant        Merchant    @relation(fields: [merchantId], references: [id])
+  
+  operatorId      String
+  operator        Operator    @relation(fields: [operatorId], references: [id])
+
+  paymentProvider String?
+  customerIdentifier String? // Phone or bank account
+  referenceId     String?     @unique // From payment provider
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String // Hashed password
+  
+  status    UserStatus @default(PENDING)
+
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+
+  branchId  String
+  branch    Branch   @relation(fields: [branchId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String   @id @unique
+  name        String   @unique
+  description String
+  permissions String[]
+  users       User[]
+}
+
+model Branch {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  location  String
+  
+  users     User[]
+  merchants Merchant[]
+  operators Operator[]
+}
+
+model GatewayConfig {
+    id        String @id @default(cuid())
+    publicKey String
+    secretKey String
+    testMode  Boolean @default(true)
+}
+
+model ApprovalWorkflow {
+    id        String @id @default(cuid())
+    name      String @unique // e.g., "Merchant Onboarding"
+    steps     Json // Array of step identifiers like ["compliance", "management"]
+}
+
+enum OnboardingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OperatorStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum TransactionType {
+  IPS_QR
+  OTP
+  MOBILE_MONEY
+  BANK_TRANSFER
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  RECONCILED
+  DISPUTED
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  INACTIVE
+}
