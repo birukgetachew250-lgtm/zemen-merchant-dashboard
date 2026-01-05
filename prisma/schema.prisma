@@ -1,11 +1,14 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model User {
@@ -18,7 +21,7 @@ model User {
   role      Role     @relation(fields: [roleId], references: [id])
   branchId  String
   branch    Branch   @relation(fields: [branchId], references: [id])
-  status    String // Active, Pending
+  status    String // Active, Pending, Inactive
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -42,53 +45,60 @@ model RolePermission {
   permissionId String
   role         Role       @relation(fields: [roleId], references: [id])
   permission   Permission @relation(fields: [permissionId], references: [id])
+  createdAt    DateTime   @default(now())
 
   @@id([roleId, permissionId])
 }
 
 model Branch {
-  id        String  @id @default(cuid())
-  name      String  @unique
+  id        String   @id @default(cuid())
+  name      String
   location  String
   users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Merchant {
-  id               String        @id @default(cuid())
-  name             String
-  branch           String
-  status           String // Approved, Pending, Rejected
-  onboardingDate   DateTime
-  operatorCount    Int
-  operators        Operator[]
-  transactions     Transaction[]
+  id             String    @id @default(cuid())
+  name           String
+  branch         String
+  status         String // Pending, Approved, Rejected
+  onboardingDate DateTime  @default(now())
+  operatorCount  Int
+  operators      Operator[]
+  transactions   Transaction[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 model Operator {
-  id               String        @id @default(cuid())
+  id               String    @id @default(cuid())
   name             String
   merchantId       String
-  merchant         Merchant      @relation(fields: [merchantId], references: [id])
+  merchant         Merchant  @relation(fields: [merchantId], references: [id])
   branch           String
   salesVolume      Float
   transactionCount Int
   successRate      Float
   status           String // Active, Inactive, Blocked
-  bankAccount      String        @unique
+  bankAccount      String    @unique
   transactions     Transaction[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model Transaction {
-  id         String      @id @default(cuid())
-  merchantId String
-  merchant   Merchant    @relation(fields: [merchantId], references: [id])
-  operatorId String
-  operator   Operator    @relation(fields: [operatorId], references: [id])
-  amount     Float
-  status     String // Completed, Pending, Failed, Reconciled
-  type       String // IPS_QR, OTP
-  date       DateTime
-  disputes   Dispute[]
+  id          String   @id @default(cuid())
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  operatorId  String
+  operator    Operator @relation(fields: [operatorId], references: [id])
+  amount      Float
+  status      String // Completed, Pending, Failed, Reconciled
+  type        String // IPS_QR, OTP, Mobile_Money
+  date        DateTime @default(now())
+  disputes    Dispute[]
 }
 
 model Dispute {
