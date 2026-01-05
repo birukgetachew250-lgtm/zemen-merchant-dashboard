@@ -1,0 +1,162 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// AUTHENTICATION AND USERS
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  status    UserStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+
+  branchId  String
+  branch    Branch   @relation(fields: [branchId], references: [id])
+}
+
+model Role {
+  id          String @id @unique
+  name        String @unique
+  description String
+  permissions String[] // e.g., ["dashboard:read", "merchants:create"]
+  users       User[]
+}
+
+model Branch {
+  id        String   @id @default(uuid())
+  name      String
+  location  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+  merchants Merchant[]
+}
+
+
+// MERCHANTS AND OPERATORS
+
+model Merchant {
+  id                String   @id @default(uuid())
+  name              String
+  onboardingDate    DateTime @default(now())
+  status            MerchantStatus @default(PENDING)
+  businessLicense   String? // URL to the document
+  companyRegistration String? // URL to the document
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  branchId          String
+  branch            Branch   @relation(fields: [branchId], references: [id])
+  
+  operators         Operator[]
+}
+
+model Operator {
+  id                String   @id @default(uuid())
+  name              String
+  bankAccount       String   @unique
+  email             String   @unique
+  contactPhone      String
+  status            OperatorStatus @default(ACTIVE)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  merchantId        String
+  merchant          Merchant @relation(fields: [merchantId], references: [id])
+
+  transactions      Transaction[]
+}
+
+
+// PAYMENTS AND TRANSACTIONS
+
+model Transaction {
+  id              String      @id @default(uuid())
+  amount          Float
+  date            DateTime    @default(now())
+  status          TransactionStatus @default(PENDING)
+  type            TransactionType
+  provider        String?     // e.g., 'telebirr', 'cbe-birr', 'zemen'
+  customerIdentifier String?  // Phone or account number
+  
+  operatorId      String
+  operator        Operator    @relation(fields: [operatorId], references: [id])
+
+  anomalyReport   AnomalyReport?
+}
+
+model AnomalyReport {
+  id                 String   @id @default(uuid())
+  isAnomalous        Boolean
+  anomalyExplanation String
+  checkedAt          DateTime @default(now())
+
+  transactionId      String   @unique
+  transaction        Transaction @relation(fields: [transactionId], references: [id])
+}
+
+
+// SETTINGS
+
+model PaymentGateway {
+  id        String  @id @default(uuid())
+  publicKey String  @unique
+  secretKey String
+  testMode  Boolean @default(true)
+}
+
+model OnboardingWorkflow {
+  id       Int      @id @default(autoincrement())
+  stepName String
+  order    Int
+  
+  @@unique([stepName, order])
+}
+
+
+// ENUMS
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  INACTIVE
+}
+
+enum MerchantStatus {
+  APPROVED
+  PENDING
+  REJECTED
+}
+
+enum OperatorStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum TransactionStatus {
+  COMPLETED
+  PENDING
+  FAILED
+  RECONCILED
+}
+
+enum TransactionType {
+  IPS_QR
+  OTP
+  MOBILE_MONEY
+}
