@@ -172,9 +172,11 @@ import Link from "next/link"
                         <span>QR Payment</span>
                       </Link>
                     </Button>
-                     <Button variant="outline" size="lg" className="h-auto py-4 flex-col gap-2">
-                        <KeyRound className="h-6 w-6"/>
-                        <span>OTP Payment</span>
+                     <Button asChild variant="outline" size="lg" className="h-auto py-4 flex-col gap-2">
+                        <Link href="/payments/otp">
+                          <KeyRound className="h-6 w-6"/>
+                          <span>OTP Payment</span>
+                        </Link>
                     </Button>
                 </CardContent>
               </Card>
